@@ -9,14 +9,15 @@ mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('MongoDB connected...'))
     .catch(err => console.log(err));
 
+const cors = require('cors');
+app.use(cors());
 
-
-app.use(express.json()); // Для парсинга JSON-запросов
+app.use(express.json());
 
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, 'uploads/') // Убедись, что эта папка существует в твоем проекте
+        cb(null, 'uploads/')
     },
     filename: function(req, file, cb) {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
@@ -32,7 +33,7 @@ app.get('/', (req, res) => {
 
 app.post('/posts', upload.single('image'), async (req, res) => {
     const { authorName, authorEmail, comment } = req.body;
-    const image = req.file.path; // Получаем путь к файлу изображения
+    const image = req.file.path;
 
     try {
         const newPost = await CatPost.create({
