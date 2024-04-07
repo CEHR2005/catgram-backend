@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5094d621-1fc6-4511-bcbe-6407fcbd3cb4" name="Changes" comment="backend + frontend connection" />
+    <list default="true" id="5094d621-1fc6-4511-bcbe-6407fcbd3cb4" name="Changes" comment="get posts">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,7 +22,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../catstagram" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -49,7 +53,7 @@
     "Node.js.server.js.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "C:/Users/sench/WebstormProjects/catstagram",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -89,7 +93,7 @@
       <workItem from="1712458784802" duration="86000" />
       <workItem from="1712458896175" duration="63000" />
       <workItem from="1712459036643" duration="1074000" />
-      <workItem from="1712497607619" duration="1857000" />
+      <workItem from="1712497607619" duration="2221000" />
     </task>
     <task id="LOCAL-00001" summary="backend + frontend connection">
       <option name="closed" value="true" />
@@ -107,6 +111,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="backend + frontend connection" />
-    <option name="LAST_COMMIT_MESSAGE" value="backend + frontend connection" />
+    <MESSAGE value="get posts" />
+    <option name="LAST_COMMIT_MESSAGE" value="get posts" />
   </component>
 </project>
