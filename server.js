@@ -63,7 +63,7 @@ app.get('/posts/images', async (req, res) => {
         const images = posts.map(post => {
             const localPath = path.join(__dirname, post.image);
             const urlPath = path.normalize(localPath.replace(__dirname, '')).replace(/\\/g, '/');
-            return `http://localhost:3000${urlPath}`;
+            return `http://localhost:3001${urlPath}`;
         });
         res.send(images);
     } catch (error) {
