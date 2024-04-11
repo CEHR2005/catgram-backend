@@ -33,6 +33,11 @@ app.get('/', (req, res) => {
 
 app.post('/posts', upload.single('image'), async (req, res) => {
     const { authorName, authorEmail, comment } = req.body;
+
+    if (!req.file) {
+        return res.status(400).send('No file received');
+    }
+
     const image = req.file.path;
 
     try {
