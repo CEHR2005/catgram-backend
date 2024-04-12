@@ -53,9 +53,7 @@ app.post('/posts', upload.single('image'), async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+
 
 app.use('/uploads', express.static('uploads'));
 
@@ -74,4 +72,42 @@ app.get('/posts/images', async (req, res) => {
     } catch (error) {
         res.status(500).send(error.message);
     }
+});
+
+app.post('/posts/:postId/comments', async (req, res) => {
+    const { postId } = req.params;
+    const { authorName, authorEmail, comment } = req.body;
+
+    try {
+        const post = await CatPost.findById(postId);
+
+        if (!post) {
+            return res.status(404).send('Post not found');
+        }
+
+        post.comments.push({ authorName, authorEmail, comment });
+
+        await post.save();
+
+        res.status(201).send(post);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+});
+app.get('/posts', async (req, res) => {
+    try {
+        const posts = await CatPost.find({});
+
+        if (posts.length > 0) {
+            return res.status(200).send(posts);
+        } else {
+            return res.status(404).send('Posts not found');
+        }
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
