@@ -19,8 +19,39 @@ const storage = multer.diskStorage({
 
 // Creating an upload instance with the storage configuration
 const upload = multer({ storage: storage });
-
-// Route to create a post with an image
+/**
+ * @swagger
+ * /posts:
+ *   post:
+ *     summary: Create a new post
+ *     tags: [Posts]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - image
+ *               - authorName
+ *               - authorEmail
+ *               - comment
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *               authorName:
+ *                 type: string
+ *               authorEmail:
+ *                 type: string
+ *               comment:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Post created successfully
+ *       400:
+ *         description: Error occurred
+ */
 router.post("/", upload.single("image"), async (req, res) => {
   const { authorName, authorEmail, comment } = req.body;
   if (!req.file) {
@@ -40,27 +71,42 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-// Route to get all images
-router.get("/images", async (req, res) => {
-  try {
-    const posts = await CatPost.find({});
-    if (!posts) {
-      return res.status(404).send("Posts not found");
-    }
-    const images = posts.map((post) => {
-      const localPath = path.join(__dirname, "..", post.image);
-      const urlPath = path
-        .normalize(localPath.replace(__dirname, ""))
-        .replace(/\\/g, "/");
-      return `http://localhost:3000${urlPath}`;
-    });
-    res.send(images);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-});
-
-// Route to add a comment to a post
+/**
+ * @swagger
+ * /posts/{postId}/comments:
+ *   post:
+ *     summary: Add a comment to a post
+ *     tags: [Posts]
+ *     parameters:
+ *       - in: path
+ *         name: postId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The post ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - authorName
+ *               - authorEmail
+ *               - comment
+ *             properties:
+ *               authorName:
+ *                 type: string
+ *               authorEmail:
+ *                 type: string
+ *               comment:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Comment added successfully
+ *       400:
+ *         description: Error occurred
+ */
 router.post("/:postId/comments", async (req, res) => {
   const { postId } = req.params;
   const { authorName, authorEmail, comment } = req.body;
@@ -77,7 +123,26 @@ router.post("/:postId/comments", async (req, res) => {
   }
 });
 
-// Route to get all posts
+/**
+ * @swagger
+ * /posts:
+ *   get:
+ *     summary: Retrieve a list of posts
+ *     tags: [Posts]
+ *     responses:
+ *       200:
+ *         description: A list of posts
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Post'
+ *       404:
+ *         description: Posts not found
+ *       500:
+ *         description: Server error
+ */
 router.get("/", async (req, res) => {
   try {
     const posts = await CatPost.find({});

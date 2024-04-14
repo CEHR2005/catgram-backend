@@ -17,8 +17,13 @@ app.use("/uploads", express.static("uploads"));
 // Importing routes
 const postRoutes = require("./routes/PostRoute");
 app.use("/posts", postRoutes);
+
 const userRoutes = require("./routes/UserRoute");
 app.use("/users", userRoutes);
+
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swagger");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get("/", (req, res) => {
   res.send("Catstagram Server is running");
