@@ -54,6 +54,7 @@ const upload = multer({ storage: storage });
  */
 router.post("/", upload.single("image"), async (req, res) => {
   const { authorName, authorEmail, comment } = req.body;
+  const hashtags = comment.match(/#\w+/g) || [];
   if (!req.file) {
     return res.status(400).send("No file received");
   }
@@ -64,6 +65,7 @@ router.post("/", upload.single("image"), async (req, res) => {
       authorName,
       authorEmail,
       comment,
+      hashtags,
     });
     res.status(201).send(newPost);
   } catch (error) {
@@ -110,16 +112,84 @@ router.post("/", upload.single("image"), async (req, res) => {
 router.post("/:postId/comments", async (req, res) => {
   const { postId } = req.params;
   const { authorName, authorEmail, comment } = req.body;
+  const hashtags = comment.match(/#\w+/g) || [];
   try {
     const post = await CatPost.findById(postId);
     if (!post) {
       return res.status(404).send("Post not found");
     }
     post.comments.push({ authorName, authorEmail, comment });
+    post.hashtags.push(...hashtags);
     await post.save();
     res.status(201).send(post);
   } catch (error) {
     res.status(400).send(error.message);
+  }
+});
+/**
+ * @swagger
+ * /posts/hashtags:
+ *   get:
+ *     summary: Retrieve a list of hashtags
+ *     tags: [Posts]
+ *     responses:
+ *       200:
+ *         description: A list of hashtags
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *       500:
+ *         description: Server error
+ */
+router.get("/hashtags", async (req, res) => {
+  try {
+    const posts = await CatPost.find({});
+    let hashtags = [];
+    posts.forEach((post) => {
+      hashtags = [...hashtags, ...post.hashtags];
+    });
+    const uniqueHashtags = [...new Set(hashtags)];
+    res.status(200).send(uniqueHashtags);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+/**
+ * @swagger
+ * /posts/hashtags/{hashtag}:
+ *   get:
+ *     summary: Retrieve a list of posts by hashtag
+ *     tags: [Posts]
+ *     parameters:
+ *       - in: path
+ *         name: hashtag
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The hashtag
+ *     responses:
+ *       200:
+ *         description: A list of posts
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Post'
+ *       500:
+ *         description: Server error
+ */
+router.get("/hashtags/:hashtag", async (req, res) => {
+  const { hashtag } = req.params;
+  try {
+    const posts = await CatPost.find({ hashtags: "#" + hashtag });
+    res.status(200).send(posts);
+  } catch (error) {
+    res.status(500).send(error.message);
   }
 });
 
@@ -155,6 +225,7 @@ router.get("/", async (req, res) => {
     res.status(500).send(error.message);
   }
 });
+
 /**
  * @swagger
  * /posts/{postId}:
@@ -234,9 +305,11 @@ router.delete("/:postId/comments/:commentId", async (req, res) => {
     res.status(400).send(error.message);
   }
 });
+
 router.post("/:postId/comments/:commentId/replies", async (req, res) => {
   const { postId, commentId } = req.params;
   const { authorName, authorEmail, comment } = req.body;
+  let hashtags = comment.match(/#\w+/g) || [];
   try {
     const post = await CatPost.findById(postId);
     if (!post) {
@@ -247,6 +320,7 @@ router.post("/:postId/comments/:commentId/replies", async (req, res) => {
       return res.status(404).send("Comment not found");
     }
     parentComment.replies.push({ authorName, authorEmail, comment });
+    post.hashtags.push(...hashtags);
     await post.save();
     res.status(201).send(post);
   } catch (error) {

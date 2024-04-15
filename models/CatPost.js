@@ -15,6 +15,7 @@ const catPostSchema = new mongoose.Schema({
   comments: [commentSchema],
   comment: String,
   dateAdded: { type: Date, default: Date.now },
+  hashtags: [String],
 });
 
 const CatPost = mongoose.model("CatPost", catPostSchema);
