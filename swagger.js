@@ -1,4 +1,4 @@
-const swaggerJsDoc = require("swagger-jsdoc");
+import swaggerJsDoc from "swagger-jsdoc";
 
 const options = {
   definition: {
@@ -63,4 +63,4 @@ const options = {
 
 const swaggerSpec = swaggerJsDoc(options);
 
-module.exports = swaggerSpec;
+export default swaggerSpec;

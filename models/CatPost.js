@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const commentSchema = new mongoose.Schema({
   authorName: String,
   authorEmail: String,
   comment: String,
   dateAdded: { type: Date, default: Date.now },
-  replies: [this],
+  replies: [mongoose.Schema.Types.Mixed],
 });
 
 const catPostSchema = new mongoose.Schema({
@@ -20,4 +20,4 @@ const catPostSchema = new mongoose.Schema({
 
 const CatPost = mongoose.model("CatPost", catPostSchema);
 
-module.exports = CatPost;
+export default CatPost;

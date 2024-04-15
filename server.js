@@ -1,19 +1,25 @@
-require("dotenv").config();
-const User = require("./models/User");
-require("bcrypt");
-const express = require("express");
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import User from "./models/User.js";
+import dotenv from "dotenv";
+import postRoutes from './routes/postRoutes.js'
+import userRoutes from './routes/userRoutes.js';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './swagger.js';
+
+dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
-const mongoose = require("mongoose");
-const cors = require("cors");
 
 mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log("MongoDB connected...");
-    createAdminAccount().then((r) => console.log(r));
-  })
-  .catch((err) => console.log(err));
+    .connect(process.env.MONGODB_URI)
+    .then(() => {
+      console.log("MongoDB connected...");
+      createAdminAccount().then((r) => console.log(r));
+    })
+    .catch((err) => console.log(err));
+
 async function createAdminAccount() {
   const adminUser = await User.findOne({ role: "admin" });
 
@@ -33,19 +39,14 @@ async function createAdminAccount() {
     }
   }
 }
+
 app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
 // Importing routes
-const postRoutes = require("./routes/PostRoute");
 app.use("/posts", postRoutes);
-
-const userRoutes = require("./routes/UserRoute");
 app.use("/users", userRoutes);
-
-const swaggerUi = require("swagger-ui-express");
-const swaggerSpec = require("./swagger");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get("/", (req, res) => {

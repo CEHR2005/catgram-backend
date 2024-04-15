@@ -1,7 +1,8 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const User = require("../models/User");
-const bcrypt = require("bcrypt");
+import User from "../models/User.js";
+import bcrypt from "bcrypt";
+
 
 /**
  * @swagger
@@ -43,6 +44,7 @@ router.post("/register", async (req, res) => {
     res.status(400).send(error.message);
   }
 });
+
 /**
  * @swagger
  * /users/login:
@@ -90,4 +92,4 @@ router.post("/login", async (req, res) => {
   res.status(200).send(user);
 });
 
-module.exports = router;
+export default router;

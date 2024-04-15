@@ -1,10 +1,12 @@
-const express = require("express");
-const router = express.Router();
-const multer = require("multer");
-const path = require("path");
-const CatPost = require("../models/CatPost");
+// Initialize express router
+import path from 'path'
 
 // Configuring storage for multer
+import multer from "multer";
+import express from "express";
+import CatPost from "../models/CatPost.js";
+const router = express.Router();
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/");
@@ -12,13 +14,14 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     cb(
       null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname),
+        `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
     );
   },
 });
 
 // Creating an upload instance with the storage configuration
 const upload = multer({ storage: storage });
+
 /**
  * @swagger
  * /posts:
@@ -126,6 +129,7 @@ router.post("/:postId/comments", async (req, res) => {
     res.status(400).send(error.message);
   }
 });
+
 /**
  * @swagger
  * /posts/hashtags:
@@ -306,6 +310,48 @@ router.delete("/:postId/comments/:commentId", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /posts/{postId}/comments/{commentId}/replies:
+ *   post:
+ *     summary: Add a reply to a comment
+ *     tags: [Posts]
+ *     parameters:
+ *       - in: path
+ *         name: postId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The post ID
+ *       - in: path
+ *         name: commentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The comment ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - authorName
+ *               - authorEmail
+ *               - comment
+ *             properties:
+ *               authorName:
+ *                 type: string
+ *               authorEmail:
+ *                 type: string
+ *               comment:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Reply added successfully
+ *       400:
+ *         description: Error occurred
+ */
 router.post("/:postId/comments/:commentId/replies", async (req, res) => {
   const { postId, commentId } = req.params;
   const { authorName, authorEmail, comment } = req.body;
@@ -327,6 +373,7 @@ router.post("/:postId/comments/:commentId/replies", async (req, res) => {
     res.status(400).send(error.message);
   }
 });
+
 /**
  * @swagger
  * /posts/{postId}:
@@ -365,4 +412,4 @@ router.get("/:postId", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
