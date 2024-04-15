@@ -5,6 +5,7 @@ const commentSchema = new mongoose.Schema({
   authorEmail: String,
   comment: String,
   dateAdded: { type: Date, default: Date.now },
+  replies: [this],
 });
 
 const catPostSchema = new mongoose.Schema({
@@ -12,6 +13,7 @@ const catPostSchema = new mongoose.Schema({
   authorName: { type: String, required: true },
   authorEmail: { type: String, required: true },
   comments: [commentSchema],
+  comment: String,
   dateAdded: { type: Date, default: Date.now },
 });
 
