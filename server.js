@@ -3,22 +3,22 @@ import mongoose from "mongoose";
 import cors from "cors";
 import User from "./models/User.js";
 import dotenv from "dotenv";
-import postRoutes from './routes/postRoutes.js'
-import userRoutes from './routes/userRoutes.js';
-import swaggerUi from 'swagger-ui-express';
-import swaggerSpec from './swagger.js';
+import postRoutes from "./routes/postRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./swagger.js";
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 mongoose
-    .connect(process.env.MONGODB_URI)
-    .then(() => {
-      console.log("MongoDB connected...");
-      createAdminAccount().then((r) => console.log(r));
-    })
-    .catch((err) => console.log(err));
+  .connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log("MongoDB connected...");
+    createAdminAccount().then((r) => console.log(r));
+  })
+  .catch((err) => console.log(err));
 
 async function createAdminAccount() {
   const adminUser = await User.findOne({ role: "admin" });

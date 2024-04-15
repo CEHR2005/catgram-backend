@@ -1,5 +1,5 @@
 // Initialize express router
-import path from 'path'
+import path from "path";
 
 // Configuring storage for multer
 import multer from "multer";
@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     cb(
       null,
-        `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`,
     );
   },
 });
